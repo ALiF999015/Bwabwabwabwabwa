@@ -4,883 +4,712 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nyx-AI | Intelligence Redefined</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --void: #050508;
-    --abyss: #0a0a12;
-    --deep: #0f0f1a;
-    --surface: #141420;
-    --elevated: #1a1a2e;
-    --border: rgba(120, 60, 220, 0.2);
-    --border-bright: rgba(150, 80, 255, 0.4);
-    --purple-dim: #3d1f7a;
-    --purple-mid: #6b35cc;
-    --purple-core: #8b5cf6;
-    --purple-bright: #a78bfa;
-    --purple-glow: #c4b5fd;
-    --accent: #e040fb;
-    --accent-dim: rgba(224, 64, 251, 0.15);
-    --text-primary: #f0eaff;
-    --text-secondary: #9d8fc0;
-    --text-muted: #5a4f72;
-    --success: #4ade80;
-    --error: #f87171;
-    --shadow-purple: 0 0 40px rgba(139, 92, 246, 0.15);
-    --shadow-accent: 0 0 20px rgba(224, 64, 251, 0.2);
-  }
+:root {
+  --bg:        #f0f6ff;
+  --bg2:       #e4eefa;
+  --surface:   #ffffff;
+  --surface2:  #f7faff;
+  --border:    rgba(59,130,246,0.18);
+  --border2:   rgba(59,130,246,0.38);
+  --blue1:     #1d4ed8;
+  --blue2:     #3b82f6;
+  --blue3:     #60a5fa;
+  --blue4:     #93c5fd;
+  --blue5:     #dbeafe;
+  --accent:    #0ea5e9;
+  --text:      #0f172a;
+  --text2:     #334155;
+  --text3:     #64748b;
+  --text4:     #94a3b8;
+  --success:   #22c55e;
+  --error:     #ef4444;
+  --shadow:    0 4px 24px rgba(59,130,246,0.12);
+  --shadow2:   0 8px 40px rgba(59,130,246,0.18);
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--void);
-    color: var(--text-primary);
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-  }
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  height:100vh;
+  overflow:hidden;
+}
 
-  /* ─── BACKGROUND FX ─── */
-  .bg-grid {
-    position: fixed; inset: 0; z-index: 0;
-    background-image:
-      linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-  }
-  .bg-orb1 {
-    position: fixed; width: 600px; height: 600px;
-    top: -200px; right: -200px; z-index: 0;
-    background: radial-gradient(circle, rgba(107,53,204,0.12) 0%, transparent 70%);
-    pointer-events: none;
-    animation: orb-drift 12s ease-in-out infinite alternate;
-  }
-  .bg-orb2 {
-    position: fixed; width: 400px; height: 400px;
-    bottom: -150px; left: -100px; z-index: 0;
-    background: radial-gradient(circle, rgba(224,64,251,0.08) 0%, transparent 70%);
-    pointer-events: none;
-    animation: orb-drift 16s ease-in-out infinite alternate-reverse;
-  }
-  @keyframes orb-drift {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(30px, 20px) scale(1.05); }
-  }
+/* BG DECORATION */
+.bg-deco{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.bg-deco::before{
+  content:'';position:absolute;
+  width:700px;height:700px;
+  top:-200px;right:-200px;
+  background:radial-gradient(circle,rgba(96,165,250,0.15) 0%,transparent 70%);
+  animation:orb 14s ease-in-out infinite alternate;
+}
+.bg-deco::after{
+  content:'';position:absolute;
+  width:500px;height:500px;
+  bottom:-150px;left:-100px;
+  background:radial-gradient(circle,rgba(14,165,233,0.1) 0%,transparent 70%);
+  animation:orb 18s ease-in-out infinite alternate-reverse;
+}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,0.05) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+@keyframes orb{
+  from{transform:translate(0,0) scale(1);}
+  to{transform:translate(30px,25px) scale(1.06);}
+}
 
-  /* ─── LOADING SCREEN ─── */
-  #loading-screen {
-    position: fixed; inset: 0; z-index: 9999;
-    background: var(--void);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 24px;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
-  }
-  #loading-screen.hidden { opacity: 0; visibility: hidden; }
-  .loading-logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 3rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--purple-core), var(--accent));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    letter-spacing: -0.02em;
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-  @keyframes pulse-glow {
-    0%, 100% { filter: drop-shadow(0 0 20px rgba(139,92,246,0.5)); }
-    50%       { filter: drop-shadow(0 0 40px rgba(224,64,251,0.7)); }
-  }
-  .loading-bar-wrap {
-    width: 200px; height: 2px;
-    background: rgba(139,92,246,0.2);
-    border-radius: 4px; overflow: hidden;
-  }
-  .loading-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--purple-core), var(--accent));
-    border-radius: 4px;
-    animation: load-progress 1.8s ease forwards;
-  }
-  @keyframes load-progress { from { width: 0; } to { width: 100%; } }
+/* LOADING */
+#loading{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--surface);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:24px;
+  transition:opacity .6s,visibility .6s;
+}
+#loading.gone{opacity:0;visibility:hidden;}
+.load-logo{
+  font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:glow 2s ease-in-out infinite;
+}
+@keyframes glow{
+  0%,100%{filter:drop-shadow(0 0 16px rgba(59,130,246,0.4));}
+  50%    {filter:drop-shadow(0 0 32px rgba(14,165,233,0.7));}
+}
+.load-bar-wrap{width:200px;height:3px;background:var(--blue5);border-radius:4px;overflow:hidden;}
+.load-bar{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--blue1),var(--accent));
+  animation:lp 1.8s ease forwards;
+}
+@keyframes lp{from{width:0}to{width:100%}}
+.load-txt{
+  font-family:'Space Mono',monospace;font-size:.7rem;
+  color:var(--text3);letter-spacing:.12em;
+}
 
-  /* ─── AUTH SCREEN ─── */
-  #auth-screen {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-  }
-  #auth-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+/* AUTH */
+#auth{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  transition:opacity .4s,visibility .4s;
+}
+#auth.gone{opacity:0;visibility:hidden;pointer-events:none;}
+.auth-card{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:24px;padding:44px 40px;
+  width:100%;max-width:420px;
+  box-shadow:var(--shadow2);
+  position:relative;z-index:1;
+  animation:cardin .5s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes cardin{
+  from{opacity:0;transform:translateY(28px) scale(.96);}
+  to  {opacity:1;transform:translateY(0) scale(1);}
+}
+.auth-logo{
+  text-align:center;margin-bottom:6px;
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.auth-tag{
+  text-align:center;margin-bottom:32px;
+  color:var(--text4);font-size:.78rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  font-family:'Space Mono',monospace;
+}
+.auth-tabs{
+  display:flex;gap:4px;background:var(--bg);
+  border-radius:12px;padding:4px;margin-bottom:24px;
+}
+.auth-tab{
+  flex:1;padding:9px;border:none;border-radius:9px;
+  background:transparent;color:var(--text3);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.auth-tab.on{
+  background:var(--surface);color:var(--blue1);
+  box-shadow:0 2px 8px rgba(59,130,246,0.15);
+  font-weight:600;
+}
 
-  .auth-card {
-    background: var(--deep);
-    border: 1px solid var(--border-bright);
-    border-radius: 24px;
-    padding: 48px 40px;
-    width: 100%; max-width: 420px;
-    position: relative; z-index: 1;
-    box-shadow: var(--shadow-purple), inset 0 1px 0 rgba(167,139,250,0.1);
-    animation: card-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  }
-  @keyframes card-in {
-    from { opacity: 0; transform: translateY(30px) scale(0.96); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  .auth-logo {
-    text-align: center; margin-bottom: 8px;
-    font-family: 'Syne', sans-serif;
-    font-size: 2.2rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--purple-core), var(--accent));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .auth-tagline {
-    text-align: center; margin-bottom: 36px;
-    color: var(--text-muted); font-size: 0.85rem;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    font-family: 'Space Mono', monospace;
-  }
-  .auth-tabs {
-    display: flex; gap: 4px;
-    background: var(--abyss);
-    border-radius: 12px; padding: 4px;
-    margin-bottom: 28px;
-  }
-  .auth-tab {
-    flex: 1; padding: 10px;
-    border: none; border-radius: 10px;
-    background: transparent; color: var(--text-muted);
-    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
-    cursor: pointer; transition: all 0.25s;
-  }
-  .auth-tab.active {
-    background: linear-gradient(135deg, var(--purple-dim), #2a0f5a);
-    color: var(--purple-bright);
-    box-shadow: 0 0 16px rgba(139,92,246,0.3);
-  }
+.fld{margin-bottom:14px;}
+.fld label{
+  display:block;margin-bottom:5px;
+  font-size:.75rem;font-weight:600;color:var(--text3);
+  letter-spacing:.06em;font-family:'Space Mono',monospace;
+}
+.fld input{
+  width:100%;padding:12px 14px;
+  background:var(--bg2);
+  border:1px solid var(--border);border-radius:11px;
+  color:var(--text);font-size:.92rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  outline:none;transition:all .2s;
+}
+.fld input:focus{
+  border-color:var(--blue2);
+  box-shadow:0 0 0 3px rgba(59,130,246,0.12);
+  background:var(--surface);
+}
+.btn-main{
+  width:100%;padding:13px;margin-top:6px;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border:none;border-radius:12px;
+  color:#fff;font-size:.92rem;font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.btn-main::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);
+}
+.btn-main:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.35);}
+.btn-main:active{transform:translateY(0);}
+.auth-note{
+  margin-top:10px;text-align:center;
+  font-size:.82rem;min-height:18px;
+}
+.auth-note.err{color:var(--error);}
+.auth-note.ok {color:var(--success);}
 
-  .input-group { margin-bottom: 16px; }
-  .input-group label {
-    display: block; margin-bottom: 6px;
-    font-size: 0.8rem; font-weight: 500;
-    color: var(--text-secondary); letter-spacing: 0.05em;
-    font-family: 'Space Mono', monospace;
-  }
-  .input-group input {
-    width: 100%; padding: 13px 16px;
-    background: var(--abyss);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--text-primary); font-size: 0.95rem;
-    font-family: 'DM Sans', sans-serif;
-    outline: none; transition: all 0.25s;
-  }
-  .input-group input:focus {
-    border-color: var(--purple-core);
-    box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
-  }
-  .btn-primary {
-    width: 100%; padding: 14px;
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    border: none; border-radius: 12px;
-    color: white; font-size: 0.95rem; font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer; margin-top: 8px;
-    position: relative; overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn-primary::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(139,92,246,0.4);
-  }
-  .btn-primary:active { transform: translateY(0); }
-  .auth-msg {
-    margin-top: 12px; text-align: center;
-    font-size: 0.85rem; min-height: 20px;
-  }
-  .auth-msg.error { color: var(--error); }
-  .auth-msg.success { color: var(--success); }
+/* APP */
+#app{
+  display:flex;height:100vh;
+  position:relative;z-index:1;
+  opacity:0;transition:opacity .4s;
+}
+#app.show{opacity:1;}
 
-  /* ─── MAIN APP ─── */
-  #app {
-    display: flex; height: 100vh;
-    position: relative; z-index: 1;
-    transition: opacity 0.4s; opacity: 0;
-  }
-  #app.visible { opacity: 1; }
+/* SIDEBAR */
+.sb{
+  width:272px;flex-shrink:0;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+}
+.sb-head{
+  padding:22px 18px 18px;
+  border-bottom:1px solid var(--border);
+}
+.logo-row{display:flex;align-items:center;gap:10px;}
+.logo-ico{
+  width:34px;height:34px;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;box-shadow:0 0 14px rgba(59,130,246,.35);
+}
+.logo-lbl{
+  font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.sb-user{
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
+}
+.user-badge{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  background:var(--blue5);
+  border-radius:12px;border:1px solid var(--border);
+}
+.u-av{
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--blue1),var(--blue3));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.82rem;color:#fff;flex-shrink:0;
+}
+.u-info{flex:1;min-width:0;}
+.u-name{font-size:.83rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.u-role{font-size:.68rem;color:var(--text4);font-family:'Space Mono',monospace;}
+.owner-tag{
+  font-size:.62rem;padding:2px 7px;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border-radius:20px;color:#fff;
+  font-family:'Space Mono',monospace;white-space:nowrap;
+}
 
-  /* ─── SIDEBAR ─── */
-  .sidebar {
-    width: 280px; flex-shrink: 0;
-    background: var(--abyss);
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column;
-    padding: 0;
-    position: relative;
-  }
-  .sidebar-header {
-    padding: 24px 20px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .logo-wrap {
-    display: flex; align-items: center; gap: 10px;
-  }
-  .logo-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; box-shadow: 0 0 16px rgba(139,92,246,0.4);
-  }
-  .logo-text {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.3rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--purple-bright), var(--accent));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
+.sb-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;}
+.nav-lbl{
+  font-size:.62rem;font-weight:700;
+  color:var(--text4);letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 8px 3px;font-family:'Space Mono',monospace;
+}
+.nav-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;background:transparent;border:none;border-radius:10px;
+  color:var(--text3);font-size:.86rem;font-weight:500;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  cursor:pointer;text-align:left;width:100%;transition:all .2s;
+}
+.nav-btn:hover{background:var(--blue5);color:var(--blue1);}
+.nav-btn.on{
+  background:linear-gradient(135deg,rgba(29,78,216,.1),rgba(14,165,233,.08));
+  color:var(--blue1);font-weight:600;
+  border:1px solid rgba(59,130,246,.2);
+}
+.nav-btn .ic{font-size:15px;width:20px;text-align:center;}
 
-  .sidebar-user {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-  .user-badge {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 12px;
-    background: var(--surface);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-  }
-  .user-avatar {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, var(--purple-dim), var(--purple-mid));
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.85rem; color: var(--purple-bright);
-    flex-shrink: 0;
-  }
-  .user-info { flex: 1; min-width: 0; }
-  .user-name {
-    font-size: 0.85rem; font-weight: 600;
-    color: var(--text-primary);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .user-role {
-    font-size: 0.7rem; color: var(--text-muted);
-    font-family: 'Space Mono', monospace;
-  }
-  .owner-badge {
-    font-size: 0.65rem; padding: 2px 7px;
-    background: linear-gradient(135deg, var(--purple-dim), #400a5a);
-    border: 1px solid rgba(224,64,251,0.3);
-    border-radius: 20px; color: #e040fb;
-    font-family: 'Space Mono', monospace;
-    white-space: nowrap;
-  }
+.sb-foot{padding:14px 10px;border-top:1px solid var(--border);}
+.btn-out{
+  width:100%;padding:10px 12px;
+  background:transparent;border:1px solid rgba(239,68,68,.25);
+  border-radius:10px;color:var(--error);font-size:.86rem;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:8px;justify-content:center;
+}
+.btn-out:hover{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.45);}
 
-  .sidebar-nav {
-    flex: 1; padding: 16px 12px;
-    display: flex; flex-direction: column; gap: 4px;
-    overflow-y: auto;
-  }
-  .nav-section-label {
-    font-size: 0.65rem; font-weight: 600;
-    color: var(--text-muted); letter-spacing: 0.12em;
-    text-transform: uppercase; padding: 8px 8px 4px;
-    font-family: 'Space Mono', monospace;
-  }
-  .nav-btn {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 12px;
-    background: transparent; border: none; border-radius: 10px;
-    color: var(--text-secondary); font-size: 0.88rem;
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
-    cursor: pointer; text-align: left; width: 100%;
-    transition: all 0.2s;
-  }
-  .nav-btn:hover {
-    background: var(--surface);
-    color: var(--text-primary);
-  }
-  .nav-btn.active {
-    background: linear-gradient(135deg, rgba(107,53,204,0.25), rgba(224,64,251,0.1));
-    color: var(--purple-bright);
-    border: 1px solid rgba(139,92,246,0.2);
-  }
-  .nav-btn .icon { font-size: 16px; width: 20px; text-align: center; }
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 
-  .sidebar-footer {
-    padding: 16px 12px;
-    border-top: 1px solid var(--border);
-  }
-  .btn-logout {
-    width: 100%; padding: 10px 12px;
-    background: transparent;
-    border: 1px solid rgba(248,113,113,0.2);
-    border-radius: 10px;
-    color: #f87171; font-size: 0.88rem;
-    font-family: 'DM Sans', sans-serif; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; gap: 8px; justify-content: center;
-  }
-  .btn-logout:hover {
-    background: rgba(248,113,113,0.08);
-    border-color: rgba(248,113,113,0.4);
-  }
+/* CHAT PANEL */
+#p-chat{flex:1;display:flex;flex-direction:column;height:100%;}
 
-  /* ─── MAIN CONTENT ─── */
-  .main {
-    flex: 1; display: flex; flex-direction: column;
-    overflow: hidden; position: relative;
-  }
+.chat-top{
+  padding:14px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
+}
+.ct-left{display:flex;align-items:center;gap:12px;}
+.ai-av{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:19px;box-shadow:0 0 18px rgba(59,130,246,.35);position:relative;
+}
+.ai-av::after{
+  content:'';position:absolute;bottom:1px;right:1px;
+  width:9px;height:9px;background:var(--success);border-radius:50%;
+  border:2px solid #fff;
+}
+.ai-nm{font-family:'Syne',sans-serif;font-weight:700;font-size:.96rem;color:var(--text);}
+.ai-st{font-size:.72rem;color:var(--success);font-family:'Space Mono',monospace;}
+.ico-btn{
+  width:34px;height:34px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:9px;color:var(--text3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all .2s;
+}
+.ico-btn:hover{border-color:var(--blue3);color:var(--blue1);background:var(--blue5);}
 
-  /* ─── CHAT PANEL ─── */
-  #panel-chat {
-    flex: 1; display: flex; flex-direction: column;
-    height: 100%;
-  }
+/* API WARN */
+.api-warn{
+  margin:12px 22px 0;padding:10px 14px;
+  background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);
+  border-radius:10px;font-size:.8rem;color:var(--error);
+  display:none;align-items:center;gap:8px;
+  font-family:'Space Mono',monospace;
+}
+.api-warn.show{display:flex;}
 
-  .chat-topbar {
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(10,10,18,0.8); backdrop-filter: blur(10px);
-  }
-  .chat-topbar-info { display: flex; align-items: center; gap: 12px; }
-  .ai-avatar {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    box-shadow: 0 0 20px rgba(139,92,246,0.4);
-    position: relative;
-  }
-  .ai-avatar::after {
-    content: '';
-    position: absolute; bottom: 2px; right: 2px;
-    width: 8px; height: 8px;
-    background: var(--success); border-radius: 50%;
-    border: 2px solid var(--abyss);
-  }
-  .ai-name {
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
-    color: var(--text-primary);
-  }
-  .ai-status {
-    font-size: 0.75rem; color: var(--success);
-    font-family: 'Space Mono', monospace;
-  }
-  .topbar-actions { display: flex; gap: 8px; }
-  .icon-btn {
-    width: 36px; height: 36px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; color: var(--text-secondary);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 16px; transition: all 0.2s;
-  }
-  .icon-btn:hover {
-    border-color: var(--border-bright); color: var(--purple-bright);
-    box-shadow: 0 0 12px rgba(139,92,246,0.2);
-  }
+/* MESSAGES */
+.chat-msgs{
+  flex:1;overflow-y:auto;padding:22px;
+  display:flex;flex-direction:column;gap:18px;
+  scroll-behavior:smooth;
+}
+.chat-msgs::-webkit-scrollbar{width:4px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--blue4);border-radius:4px;}
 
-  .chat-messages {
-    flex: 1; overflow-y: auto;
-    padding: 24px;
-    display: flex; flex-direction: column; gap: 20px;
-    scroll-behavior: smooth;
-  }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-track { background: transparent; }
-  .chat-messages::-webkit-scrollbar-thumb {
-    background: var(--purple-dim); border-radius: 4px;
-  }
+.mw{display:flex;gap:11px;animation:min .28s cubic-bezier(.34,1.2,.64,1) forwards;opacity:0;}
+@keyframes min{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.mw.u{flex-direction:row-reverse;}
+.m-av{
+  width:30px;height:30px;flex-shrink:0;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;
+}
+.m-av.ai-a{background:linear-gradient(135deg,var(--blue1),var(--accent));color:#fff;box-shadow:0 0 10px rgba(59,130,246,.25);}
+.m-av.u-a{background:var(--bg2);border:1px solid var(--border);color:var(--blue1);font-family:'Syne',sans-serif;}
+.m-body{max-width:70%;display:flex;flex-direction:column;gap:3px;}
+.mw.u .m-body{align-items:flex-end;}
+.m-nm{font-size:.68rem;color:var(--text4);font-family:'Space Mono',monospace;padding:0 3px;}
+.m-bub{
+  padding:11px 15px;border-radius:15px;
+  line-height:1.65;font-size:.9rem;
+  word-wrap:break-word;
+}
+.m-bub.ai{
+  background:var(--surface);border:1px solid var(--border);
+  border-top-left-radius:4px;color:var(--text);
+}
+.m-bub.u{
+  background:linear-gradient(135deg,var(--blue1),var(--blue2));
+  border-top-right-radius:4px;color:#fff;
+}
 
-  .msg-wrap {
-    display: flex; gap: 12px;
-    animation: msg-in 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
-    opacity: 0;
-  }
-  @keyframes msg-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .msg-wrap.user { flex-direction: row-reverse; }
-  .msg-avatar {
-    width: 32px; height: 32px; flex-shrink: 0;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: 700;
-  }
-  .msg-avatar.ai-av {
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    box-shadow: 0 0 12px rgba(139,92,246,0.3);
-  }
-  .msg-avatar.user-av {
-    background: linear-gradient(135deg, var(--surface), var(--elevated));
-    border: 1px solid var(--border); color: var(--purple-bright);
-    font-family: 'Syne', sans-serif;
-  }
-  .msg-content { max-width: 72%; display: flex; flex-direction: column; gap: 4px; }
-  .msg-wrap.user .msg-content { align-items: flex-end; }
-  .msg-name {
-    font-size: 0.72rem; color: var(--text-muted);
-    font-family: 'Space Mono', monospace; padding: 0 4px;
-  }
-  .msg-bubble {
-    padding: 12px 16px;
-    border-radius: 16px; line-height: 1.65;
-    font-size: 0.93rem;
-    white-space: pre-wrap; word-wrap: break-word;
-  }
-  .msg-bubble.ai {
-    background: var(--elevated);
-    border: 1px solid var(--border);
-    border-top-left-radius: 4px;
-    color: var(--text-primary);
-  }
-  .msg-bubble.user {
-    background: linear-gradient(135deg, var(--purple-mid), var(--purple-dim));
-    border: 1px solid rgba(139,92,246,0.3);
-    border-top-right-radius: 4px;
-    color: var(--text-primary);
-  }
+/* Markdown-like rendering */
+.m-bub .md-bold{font-weight:700;}
+.m-bub .md-code{
+  font-family:'Space Mono',monospace;font-size:.8rem;
+  background:rgba(59,130,246,.08);border:1px solid var(--border);
+  border-radius:5px;padding:1px 5px;
+}
+.m-bub pre{
+  font-family:'Space Mono',monospace;font-size:.78rem;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:9px;padding:12px;margin:8px 0;
+  overflow-x:auto;white-space:pre;
+}
+.m-bub.u pre{background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.2);}
 
-  /* typing indicator */
-  .typing-indicator {
-    display: flex; align-items: center; gap: 5px;
-    padding: 14px 18px;
-  }
-  .typing-dot {
-    width: 7px; height: 7px;
-    background: var(--purple-core); border-radius: 50%;
-    animation: typing-bounce 1.4s ease-in-out infinite;
-  }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes typing-bounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30%           { transform: translateY(-6px); opacity: 1; }
-  }
+/* TYPING */
+.typing-dots{display:flex;align-items:center;gap:4px;padding:12px 15px;}
+.td{width:6px;height:6px;background:var(--blue3);border-radius:50%;animation:td 1.4s ease-in-out infinite;}
+.td:nth-child(2){animation-delay:.2s;}
+.td:nth-child(3){animation-delay:.4s;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-6px);opacity:1;}}
 
-  /* welcome state */
-  .chat-welcome {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 40px; text-align: center; gap: 16px;
-  }
-  .welcome-icon {
-    width: 72px; height: 72px;
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px;
-    box-shadow: 0 0 40px rgba(139,92,246,0.4);
-    animation: pulse-glow 3s ease-in-out infinite;
-  }
-  .welcome-title {
-    font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--text-primary), var(--purple-bright));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .welcome-sub { color: var(--text-muted); font-size: 0.9rem; max-width: 320px; }
+/* WELCOME */
+.chat-welcome{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px;text-align:center;gap:14px;
+}
+.wlc-ico{
+  width:70px;height:70px;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:34px;box-shadow:0 0 36px rgba(59,130,246,.3);
+  animation:glow 3s ease-in-out infinite;
+}
+.wlc-title{
+  font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;
+  background:linear-gradient(135deg,var(--text),var(--blue1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.wlc-sub{color:var(--text3);font-size:.88rem;max-width:300px;line-height:1.6;}
 
-  .chat-input-area {
-    padding: 16px 24px 20px;
-    border-top: 1px solid var(--border);
-    background: rgba(10,10,18,0.8); backdrop-filter: blur(10px);
-  }
-  .input-row {
-    display: flex; gap: 10px; align-items: flex-end;
-  }
-  .chat-input {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 13px 16px;
-    color: var(--text-primary); font-size: 0.93rem;
-    font-family: 'DM Sans', sans-serif;
-    resize: none; outline: none;
-    max-height: 120px; min-height: 48px;
-    line-height: 1.5;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .chat-input:focus {
-    border-color: var(--purple-core);
-    box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
-  }
-  .chat-input::placeholder { color: var(--text-muted); }
-  .send-btn {
-    width: 48px; height: 48px;
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    border: none; border-radius: 14px;
-    color: white; font-size: 18px;
-    cursor: pointer; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 16px rgba(139,92,246,0.3);
-  }
-  .send-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(139,92,246,0.5);
-  }
-  .send-btn:active { transform: translateY(0); }
-  .send-btn:disabled {
-    opacity: 0.5; cursor: not-allowed; transform: none;
-  }
-  .input-hint {
-    font-size: 0.72rem; color: var(--text-muted);
-    margin-top: 8px; text-align: center;
-    font-family: 'Space Mono', monospace;
-  }
+/* INPUT */
+.chat-inp-area{
+  padding:14px 22px 18px;
+  border-top:1px solid var(--border);
+  background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
+}
+.inp-row{display:flex;gap:9px;align-items:flex-end;}
+.chat-inp{
+  flex:1;background:var(--bg2);
+  border:1px solid var(--border);border-radius:13px;
+  padding:12px 15px;color:var(--text);font-size:.9rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  resize:none;outline:none;max-height:120px;min-height:46px;line-height:1.5;
+  transition:border-color .2s,box-shadow .2s;
+}
+.chat-inp:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(59,130,246,.1);background:var(--surface);}
+.chat-inp::placeholder{color:var(--text4);}
+.send-btn{
+  width:46px;height:46px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border:none;border-radius:13px;color:#fff;font-size:17px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 14px rgba(59,130,246,.3);
+}
+.send-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(59,130,246,.45);}
+.send-btn:active{transform:translateY(0);}
+.send-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.inp-hint{font-size:.68rem;color:var(--text4);margin-top:7px;text-align:center;font-family:'Space Mono',monospace;}
 
-  /* ─── SETTINGS PANEL ─── */
-  #panel-settings {
-    display: none; flex: 1;
-    flex-direction: column; height: 100%;
-  }
-  #panel-settings.active { display: flex; }
+/* SETTINGS PANEL */
+#p-set{display:none;flex:1;flex-direction:column;height:100%;}
+.set-top{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
+}
+.set-top h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;}
+.set-body{flex:1;overflow-y:auto;padding:22px;}
+.set-body::-webkit-scrollbar{width:4px;}
+.set-body::-webkit-scrollbar-thumb{background:var(--blue4);border-radius:4px;}
 
-  .settings-topbar {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .settings-topbar h2 {
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem;
-  }
-  .settings-body { flex: 1; overflow-y: auto; padding: 24px; }
-  .settings-body::-webkit-scrollbar { width: 4px; }
-  .settings-body::-webkit-scrollbar-thumb {
-    background: var(--purple-dim); border-radius: 4px;
-  }
+.sc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:22px;margin-bottom:18px;
+}
+.sc h3{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;
+  color:var(--blue1);margin-bottom:14px;display:flex;align-items:center;gap:7px;
+}
+.slbl{
+  display:block;margin-bottom:5px;
+  font-size:.74rem;color:var(--text3);
+  font-family:'Space Mono',monospace;letter-spacing:.05em;
+}
+.si,.sta,.ssel{
+  width:100%;padding:10px 13px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-size:.87rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  outline:none;transition:all .2s;margin-bottom:11px;
+}
+.sta{resize:vertical;min-height:130px;line-height:1.6;font-family:'Space Mono',monospace;font-size:.78rem;}
+.si:focus,.sta:focus,.ssel:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(59,130,246,.1);background:var(--surface);}
+.btn-sv{
+  padding:10px 20px;
+  background:linear-gradient(135deg,var(--blue1),var(--accent));
+  border:none;border-radius:10px;color:#fff;font-size:.85rem;font-weight:600;
+  font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:transform .2s,box-shadow .2s;
+}
+.btn-sv:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(59,130,246,.35);}
+.sv-msg{
+  display:inline-block;margin-left:10px;font-size:.78rem;color:var(--success);
+  opacity:0;transition:opacity .3s;font-family:'Space Mono',monospace;
+}
+.sv-msg.show{opacity:1;}
+.sv-msg.err{color:var(--error);}
 
-  .settings-card {
-    background: var(--deep);
-    border: 1px solid var(--border);
-    border-radius: 16px; padding: 24px;
-    margin-bottom: 20px;
-  }
-  .settings-card h3 {
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem;
-    color: var(--purple-bright); margin-bottom: 16px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .settings-label {
-    display: block; margin-bottom: 6px;
-    font-size: 0.8rem; color: var(--text-secondary);
-    font-family: 'Space Mono', monospace; letter-spacing: 0.05em;
-  }
-  .settings-input, .settings-textarea, .settings-select {
-    width: 100%; padding: 11px 14px;
-    background: var(--abyss);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text-primary); font-size: 0.9rem;
-    font-family: 'DM Sans', sans-serif;
-    outline: none; transition: all 0.2s;
-    margin-bottom: 12px;
-  }
-  .settings-textarea {
-    resize: vertical; min-height: 140px; line-height: 1.6;
-    font-family: 'Space Mono', monospace; font-size: 0.82rem;
-  }
-  .settings-input:focus, .settings-textarea:focus, .settings-select:focus {
-    border-color: var(--purple-core);
-    box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
-  }
-  .btn-save {
-    padding: 11px 22px;
-    background: linear-gradient(135deg, var(--purple-mid), var(--accent));
-    border: none; border-radius: 10px;
-    color: white; font-size: 0.88rem; font-weight: 600;
-    font-family: 'DM Sans', sans-serif; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn-save:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(139,92,246,0.4);
-  }
-  .save-msg {
-    display: inline-block; margin-left: 12px;
-    font-size: 0.82rem; color: var(--success);
-    opacity: 0; transition: opacity 0.3s;
-    font-family: 'Space Mono', monospace;
-  }
-  .save-msg.show { opacity: 1; }
+.lock-notice{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:14px 15px;
+  background:rgba(14,165,233,.06);border:1px solid rgba(14,165,233,.2);
+  border-radius:12px;margin-bottom:18px;font-size:.83rem;color:var(--text2);
+}
 
-  .owner-only-notice {
-    display: flex; align-items: center; gap: 10px;
-    padding: 14px 16px;
-    background: rgba(224,64,251,0.07);
-    border: 1px solid rgba(224,64,251,0.2);
-    border-radius: 12px; margin-bottom: 20px;
-    font-size: 0.85rem; color: var(--text-secondary);
-  }
-  .lock-icon { font-size: 18px; }
+/* MODAL */
+.modal-bg{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(15,23,42,.45);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;visibility:hidden;transition:all .25s;
+}
+.modal-bg.open{opacity:1;visibility:visible;}
+.modal{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:20px;padding:30px;width:100%;max-width:460px;
+  box-shadow:var(--shadow2);transform:scale(.95);transition:transform .25s;
+}
+.modal-bg.open .modal{transform:scale(1);}
+.modal h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:18px;}
+.m-close{float:right;background:none;border:none;color:var(--text3);font-size:19px;cursor:pointer;}
 
-  /* ─── NO API WARNING ─── */
-  .no-api-banner {
-    padding: 10px 16px;
-    background: rgba(248,113,113,0.08);
-    border: 1px solid rgba(248,113,113,0.2);
-    border-radius: 10px; margin-bottom: 12px;
-    font-size: 0.82rem; color: #f87171;
-    display: none; align-items: center; gap: 8px;
-    font-family: 'Space Mono', monospace;
-  }
-  .no-api-banner.show { display: flex; }
-
-  /* ─── MODAL ─── */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 500;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px; opacity: 0; visibility: hidden;
-    transition: all 0.25s;
-  }
-  .modal-overlay.open { opacity: 1; visibility: visible; }
-  .modal {
-    background: var(--deep); border: 1px solid var(--border-bright);
-    border-radius: 20px; padding: 32px; width: 100%; max-width: 480px;
-    box-shadow: var(--shadow-purple);
-    transform: scale(0.95); transition: transform 0.25s;
-  }
-  .modal-overlay.open .modal { transform: scale(1); }
-  .modal h3 {
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem;
-    margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
-  }
-  .modal-close {
-    float: right; background: none; border: none;
-    color: var(--text-muted); font-size: 20px; cursor: pointer;
-    line-height: 1;
-  }
-
-  /* responsive */
-  @media (max-width: 680px) {
-    .sidebar { width: 240px; }
-  }
-  @media (max-width: 520px) {
-    .sidebar { display: none; }
-  }
+/* RESPONSIVE */
+@media(max-width:680px){.sb{width:230px;}}
+@media(max-width:500px){.sb{display:none;}}
 </style>
 </head>
 <body>
 
+<div class="bg-deco"></div>
 <div class="bg-grid"></div>
-<div class="bg-orb1"></div>
-<div class="bg-orb2"></div>
 
 <!-- LOADING -->
-<div id="loading-screen">
-  <div class="loading-logo">✦ Nyx-AI</div>
-  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
-  <div style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-muted);letter-spacing:0.1em;">INITIALIZING SYSTEM...</div>
+<div id="loading">
+  <div class="load-logo">✦ Nyx-AI</div>
+  <div class="load-bar-wrap"><div class="load-bar"></div></div>
+  <div class="load-txt">INITIALIZING SYSTEM...</div>
 </div>
 
 <!-- AUTH -->
-<div id="auth-screen">
+<div id="auth">
   <div class="auth-card">
     <div class="auth-logo">✦ Nyx-AI</div>
-    <div class="auth-tagline">Next-Generation Intelligence</div>
+    <div class="auth-tag">Next-Generation Intelligence</div>
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Masuk</button>
-      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Daftar</button>
+      <button class="auth-tab on" id="tab-in" onclick="switchTab('in')">Masuk</button>
+      <button class="auth-tab" id="tab-up" onclick="switchTab('up')">Daftar</button>
     </div>
 
-    <!-- LOGIN FORM -->
-    <div id="form-login">
-      <div class="input-group">
-        <label>USERNAME</label>
-        <input type="text" id="login-user" placeholder="Masukkan username" autocomplete="username">
-      </div>
-      <div class="input-group">
-        <label>PASSWORD</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button class="btn-primary" onclick="doLogin()">Masuk →</button>
-      <div class="auth-msg" id="login-msg"></div>
+    <div id="form-in">
+      <div class="fld"><label>USERNAME</label><input type="text" id="li-user" placeholder="Masukkan username" autocomplete="username"></div>
+      <div class="fld"><label>PASSWORD</label><input type="password" id="li-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn-main" onclick="doLogin()">Masuk →</button>
+      <div class="auth-note" id="li-msg"></div>
     </div>
 
-    <!-- REGISTER FORM -->
-    <div id="form-register" style="display:none">
-      <div class="input-group">
-        <label>USERNAME</label>
-        <input type="text" id="reg-user" placeholder="Pilih username unik" autocomplete="username">
-      </div>
-      <div class="input-group">
-        <label>PASSWORD</label>
-        <input type="password" id="reg-pass" placeholder="Min. 6 karakter" autocomplete="new-password">
-      </div>
-      <div class="input-group">
-        <label>KONFIRMASI PASSWORD</label>
-        <input type="password" id="reg-pass2" placeholder="Ulangi password" autocomplete="new-password">
-      </div>
-      <button class="btn-primary" onclick="doRegister()">Buat Akun →</button>
-      <div class="auth-msg" id="reg-msg"></div>
+    <div id="form-up" style="display:none">
+      <div class="fld"><label>USERNAME</label><input type="text" id="ru-user" placeholder="Pilih username unik" autocomplete="username"></div>
+      <div class="fld"><label>PASSWORD</label><input type="password" id="ru-pass" placeholder="Min. 6 karakter" autocomplete="new-password"></div>
+      <div class="fld"><label>KONFIRMASI PASSWORD</label><input type="password" id="ru-pass2" placeholder="Ulangi password" autocomplete="new-password"></div>
+      <button class="btn-main" onclick="doRegister()">Buat Akun →</button>
+      <div class="auth-note" id="ru-msg"></div>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- APP -->
 <div id="app">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="logo-wrap">
-        <div class="logo-icon">✦</div>
-        <div class="logo-text">Nyx-AI</div>
+  <aside class="sb">
+    <div class="sb-head">
+      <div class="logo-row">
+        <div class="logo-ico">✦</div>
+        <div class="logo-lbl">Nyx-AI</div>
       </div>
     </div>
-
-    <div class="sidebar-user">
+    <div class="sb-user">
       <div class="user-badge">
-        <div class="user-avatar" id="sb-avatar">?</div>
-        <div class="user-info">
-          <div class="user-name" id="sb-username">—</div>
-          <div class="user-role" id="sb-role">member</div>
+        <div class="u-av" id="sb-av">?</div>
+        <div class="u-info">
+          <div class="u-name" id="sb-name">—</div>
+          <div class="u-role" id="sb-role">member</div>
         </div>
-        <div class="owner-badge" id="sb-owner-badge" style="display:none">OWNER</div>
+        <div class="owner-tag" id="sb-own" style="display:none">OWNER</div>
       </div>
     </div>
-
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Navigasi</div>
-      <button class="nav-btn active" id="nav-chat" onclick="showPanel('chat')">
-        <span class="icon">💬</span> Chat dengan Nyx
-      </button>
-      <button class="nav-btn" id="nav-settings" onclick="showPanel('settings')">
-        <span class="icon">⚙️</span> Pengaturan
-      </button>
-      <div class="nav-section-label" style="margin-top:8px">Akun</div>
-      <button class="nav-btn" onclick="openChangePass()">
-        <span class="icon">🔑</span> Ganti Password
-      </button>
+    <nav class="sb-nav">
+      <div class="nav-lbl">Navigasi</div>
+      <button class="nav-btn on" id="nav-chat" onclick="showPanel('chat')"><span class="ic">💬</span> Chat dengan Nyx</button>
+      <button class="nav-btn" id="nav-set" onclick="showPanel('set')"><span class="ic">⚙️</span> Pengaturan</button>
+      <div class="nav-lbl" style="margin-top:8px">Akun</div>
+      <button class="nav-btn" onclick="openCpModal()"><span class="ic">🔑</span> Ganti Password</button>
     </nav>
-
-    <div class="sidebar-footer">
-      <button class="btn-logout" onclick="doLogout()">
-        <span>↩</span> Keluar
-      </button>
+    <div class="sb-foot">
+      <button class="btn-out" onclick="doLogout()"><span>↩</span> Keluar</button>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main">
-    <!-- CHAT PANEL -->
-    <div id="panel-chat">
-      <div class="chat-topbar">
-        <div class="chat-topbar-info">
-          <div class="ai-avatar">✦</div>
+    <!-- CHAT -->
+    <div id="p-chat">
+      <div class="chat-top">
+        <div class="ct-left">
+          <div class="ai-av">✦</div>
           <div>
-            <div class="ai-name">Nyx-AI</div>
-            <div class="ai-status" id="ai-status-text">● Online & Siap</div>
+            <div class="ai-nm">Nyx-AI</div>
+            <div class="ai-st" id="ai-st">● Online & Siap</div>
           </div>
         </div>
-        <div class="topbar-actions">
-          <button class="icon-btn" title="Hapus chat" onclick="clearChat()">🗑️</button>
+        <div style="display:flex;gap:7px;">
+          <button class="ico-btn" title="Hapus chat" onclick="clearChat()">🗑️</button>
         </div>
       </div>
 
-      <div class="no-api-banner" id="no-api-banner">
-        ⚠️ API Key belum diset. Pergi ke Pengaturan → Konfigurasi API untuk memulai.
-      </div>
+      <div class="api-warn" id="api-warn">⚠️ API Key belum diset. Masuk ke Pengaturan dan isi OpenRouter API Key.</div>
 
-      <div id="chat-area" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
-        <div class="chat-welcome" id="chat-welcome">
-          <div class="welcome-icon">✦</div>
-          <div class="welcome-title">Halo, saya Nyx-AI</div>
-          <div class="welcome-sub">Asisten kecerdasan buatan Anda. Tanya apa saja — saya siap membantu.</div>
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="chat-welcome" id="chat-wlc">
+          <div class="wlc-ico">✦</div>
+          <div class="wlc-title">Halo, saya Nyx-AI</div>
+          <div class="wlc-sub">Asisten kecerdasan buatan Anda. Tanya apa saja — saya siap membantu.</div>
         </div>
-        <div class="chat-messages" id="chat-messages" style="display:none;"></div>
+        <div class="chat-msgs" id="chat-msgs" style="display:none;"></div>
       </div>
 
-      <div class="chat-input-area">
-        <div class="input-row">
-          <textarea class="chat-input" id="chat-input" placeholder="Ketik pesan ke Nyx-AI..." rows="1"
+      <div class="chat-inp-area">
+        <div class="inp-row">
+          <textarea class="chat-inp" id="chat-inp" placeholder="Ketik pesan ke Nyx-AI..." rows="1"
             onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+          <button class="send-btn" id="send-btn" onclick="sendMsg()">➤</button>
         </div>
-        <div class="input-hint">ENTER untuk kirim · SHIFT+ENTER baris baru</div>
+        <div class="inp-hint">ENTER kirim · SHIFT+ENTER baris baru</div>
       </div>
     </div>
 
-    <!-- SETTINGS PANEL -->
-    <div id="panel-settings">
-      <div class="settings-topbar">
-        <span style="font-size:20px;">⚙️</span>
+    <!-- SETTINGS -->
+    <div id="p-set">
+      <div class="set-top">
+        <span style="font-size:18px;">⚙️</span>
         <h2>Pengaturan</h2>
       </div>
-      <div class="settings-body">
+      <div class="set-body">
 
-        <!-- API KEY - OWNER ONLY -->
-        <div id="section-api" style="display:none">
-          <div class="settings-card">
-            <h3>🔐 Konfigurasi API</h3>
-            <label class="settings-label">ANTHROPIC API KEY</label>
-            <input type="password" class="settings-input" id="api-key-input" placeholder="sk-ant-...">
-            <label class="settings-label">MODEL AI</label>
-            <select class="settings-select" id="model-select">
-              <option value="claude-sonnet-4-20250514">Claude Sonnet 4 (Recommended)</option>
-              <option value="claude-opus-4-5">Claude Opus 4.5</option>
-              <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fast)</option>
+        <!-- OWNER: API -->
+        <div id="sec-api" style="display:none">
+          <div class="sc">
+            <h3>🔐 Konfigurasi API OpenRouter</h3>
+            <label class="slbl">OPENROUTER API KEY</label>
+            <input type="password" class="si" id="api-inp" placeholder="sk-or-v1-...">
+            <label class="slbl">MODEL AI</label>
+            <select class="ssel" id="model-sel">
+              <optgroup label="── Anthropic Claude ──">
+                <option value="anthropic/claude-sonnet-4-5">Claude Sonnet 4.5 (Recommended)</option>
+                <option value="anthropic/claude-opus-4-5">Claude Opus 4.5 (Powerful)</option>
+                <option value="anthropic/claude-haiku-4-5">Claude Haiku 4.5 (Fast)</option>
+                <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                <option value="anthropic/claude-3.7-sonnet">Claude 3.7 Sonnet</option>
+              </optgroup>
+              <optgroup label="── Google Gemini ──">
+                <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash</option>
+                <option value="google/gemini-2.5-pro-preview">Gemini 2.5 Pro</option>
+              </optgroup>
+              <optgroup label="── OpenAI ──">
+                <option value="openai/gpt-4o">GPT-4o</option>
+                <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+                <option value="openai/o3-mini">o3-mini</option>
+              </optgroup>
+              <optgroup label="── Meta Llama ──">
+                <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B</option>
+                <option value="meta-llama/llama-3.1-8b-instruct">Llama 3.1 8B (Free)</option>
+              </optgroup>
+              <optgroup label="── Mistral ──">
+                <option value="mistralai/mistral-7b-instruct">Mistral 7B (Free)</option>
+                <option value="mistralai/mixtral-8x7b-instruct">Mixtral 8x7B</option>
+              </optgroup>
             </select>
-            <button class="btn-save" onclick="saveAPISettings()">Simpan API</button>
-            <span class="save-msg" id="save-api-msg">✓ Tersimpan!</span>
-          </div>
-        </div>
-
-        <!-- SYSTEM PROMPT - OWNER ONLY -->
-        <div id="section-sysprompt" style="display:none">
-          <div class="settings-card">
-            <h3>🧠 System Prompt Nyx-AI</h3>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;font-family:'Space Mono',monospace;">
-              System prompt ini akan berlaku untuk <strong style="color:var(--purple-bright)">semua pengguna</strong> yang terdaftar.
-            </p>
-            <label class="settings-label">SYSTEM PROMPT</label>
-            <textarea class="settings-textarea" id="sysprompt-input" placeholder="Masukkan instruksi untuk Nyx-AI..."></textarea>
-            <button class="btn-save" onclick="saveSysPrompt()">Simpan System Prompt</button>
-            <span class="save-msg" id="save-sys-msg">✓ Tersimpan & Berlaku Global!</span>
-          </div>
-        </div>
-
-        <!-- MEMBER VIEW -->
-        <div id="section-member-info" style="display:none">
-          <div class="owner-only-notice">
-            <span class="lock-icon">🔒</span>
-            <div>
-              Pengaturan API Key dan System Prompt hanya bisa diakses oleh <strong>Owner</strong>.
-              Kamu bisa menikmati chat dengan Nyx-AI menggunakan konfigurasi yang sudah diset.
+            <label class="slbl">CUSTOM MODEL ID <span style="color:var(--text4)">(opsional — override dropdown di atas)</span></label>
+            <input type="text" class="si" id="model-custom" placeholder="contoh: deepseek/deepseek-r1">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+              <button class="btn-sv" onclick="saveAPI()">Simpan Konfigurasi API</button>
+              <span class="sv-msg" id="sv-api">✓ API tersimpan!</span>
             </div>
           </div>
         </div>
 
-        <!-- CHANGE PASSWORD (all users) -->
-        <div class="settings-card">
+        <!-- OWNER: SYSTEM PROMPT -->
+        <div id="sec-sys" style="display:none">
+          <div class="sc">
+            <h3>🧠 System Prompt Global Nyx-AI</h3>
+            <p style="font-size:.79rem;color:var(--text3);margin-bottom:12px;font-family:'Space Mono',monospace;line-height:1.6;">
+              System prompt ini berlaku untuk <strong style="color:var(--blue1)">semua pengguna</strong> yang terdaftar.
+            </p>
+            <label class="slbl">SYSTEM PROMPT</label>
+            <textarea class="sta" id="sys-inp" placeholder="Contoh: Kamu adalah asisten AI bernama Nyx yang ramah dan profesional..."></textarea>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+              <button class="btn-sv" onclick="saveSys()">Simpan System Prompt</button>
+              <span class="sv-msg" id="sv-sys">✓ Tersimpan & berlaku global!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEMBER INFO -->
+        <div id="sec-mem" style="display:none">
+          <div class="lock-notice">
+            <span style="font-size:18px;flex-shrink:0;">🔒</span>
+            <div>Pengaturan API Key dan System Prompt hanya bisa diakses oleh <strong>Owner</strong>. Kamu bisa langsung chat dengan Nyx-AI.</div>
+          </div>
+        </div>
+
+        <!-- CHANGE PASSWORD -->
+        <div class="sc">
           <h3>🔑 Ganti Password</h3>
-          <label class="settings-label">PASSWORD LAMA</label>
-          <input type="password" class="settings-input" id="old-pass">
-          <label class="settings-label">PASSWORD BARU</label>
-          <input type="password" class="settings-input" id="new-pass">
-          <label class="settings-label">KONFIRMASI PASSWORD BARU</label>
-          <input type="password" class="settings-input" id="new-pass2">
-          <button class="btn-save" onclick="changePassword()">Ganti Password</button>
-          <span class="save-msg" id="save-pass-msg" style="color:var(--success)">✓ Password diperbarui!</span>
-          <span class="save-msg" id="save-pass-err" style="color:var(--error)"></span>
+          <label class="slbl">PASSWORD LAMA</label>
+          <input type="password" class="si" id="cp-old">
+          <label class="slbl">PASSWORD BARU</label>
+          <input type="password" class="si" id="cp-new">
+          <label class="slbl">KONFIRMASI PASSWORD BARU</label>
+          <input type="password" class="si" id="cp-new2">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+            <button class="btn-sv" onclick="doCP()">Ganti Password</button>
+            <span class="sv-msg" id="sv-cp-ok">✓ Password diperbarui!</span>
+            <span class="sv-msg err" id="sv-cp-err"></span>
+          </div>
         </div>
 
         <!-- ABOUT -->
-        <div class="settings-card">
+        <div class="sc">
           <h3>ℹ️ Tentang Nyx-AI</h3>
-          <div style="font-size:0.85rem;color:var(--text-secondary);line-height:1.7;font-family:'Space Mono',monospace;">
-            <div>Versi: <span style="color:var(--purple-bright)">1.0.0</span></div>
-            <div>Engine: <span style="color:var(--purple-bright)">Claude by Anthropic</span></div>
-            <div>Interface: <span style="color:var(--purple-bright)">Nyx-AI Premium</span></div>
+          <div style="font-size:.82rem;color:var(--text3);line-height:1.9;font-family:'Space Mono',monospace;">
+            <div>Versi: <span style="color:var(--blue1);font-weight:700;">1.1.0</span></div>
+            <div>API: <span style="color:var(--blue1);font-weight:700;">OpenRouter</span></div>
+            <div>Interface: <span style="color:var(--blue1);font-weight:700;">Nyx-AI Premium</span></div>
           </div>
         </div>
 
@@ -889,320 +718,286 @@
   </main>
 </div>
 
-<!-- CHANGE PASS MODAL -->
-<div class="modal-overlay" id="change-pass-modal">
+<!-- MODAL GANTI PASSWORD -->
+<div class="modal-bg" id="cp-modal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('change-pass-modal')">✕</button>
+    <button class="m-close" onclick="closeModal()">✕</button>
     <h3>🔑 Ganti Password</h3>
-    <div class="input-group">
-      <label>PASSWORD LAMA</label>
-      <input type="password" class="settings-input" id="m-old-pass">
-    </div>
-    <div class="input-group">
-      <label>PASSWORD BARU</label>
-      <input type="password" class="settings-input" id="m-new-pass">
-    </div>
-    <div class="input-group">
-      <label>KONFIRMASI PASSWORD BARU</label>
-      <input type="password" class="settings-input" id="m-new-pass2">
-    </div>
-    <button class="btn-save" onclick="changePasswordModal()">Ganti Password</button>
-    <div class="save-msg show" id="m-pass-msg" style="display:block;margin-top:8px;opacity:0;"></div>
+    <div class="fld"><label>PASSWORD LAMA</label><input type="password" class="si" id="mcp-old"></div>
+    <div class="fld"><label>PASSWORD BARU</label><input type="password" class="si" id="mcp-new"></div>
+    <div class="fld"><label>KONFIRMASI PASSWORD BARU</label><input type="password" class="si" id="mcp-new2"></div>
+    <button class="btn-sv" onclick="doMCP()">Ganti Password</button>
+    <div id="mcp-msg" style="margin-top:10px;font-size:.82rem;font-family:'Space Mono',monospace;opacity:0;transition:opacity .3s;"></div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
-// STORAGE & DATA MANAGEMENT
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════
 const OWNER_UN = 'ALiF999013';
 const OWNER_PW = 'LALAPIPIRARAJASJDJIAIDUC183829328477UAWUDHSHDDHFD';
 
-function getUsers() {
-  try { return JSON.parse(localStorage.getItem('nyx_users') || '{}'); } catch { return {}; }
-}
-function saveUsers(u) { localStorage.setItem('nyx_users', JSON.stringify(u)); }
-function getConfig() {
-  try { return JSON.parse(localStorage.getItem('nyx_config') || '{}'); } catch { return {}; }
-}
-function saveConfig(c) { localStorage.setItem('nyx_config', JSON.stringify(c)); }
-function getSession() {
-  try { return JSON.parse(sessionStorage.getItem('nyx_session') || 'null'); } catch { return null; }
-}
-function setSession(u) { sessionStorage.setItem('nyx_session', JSON.stringify(u)); }
-function clearSession() { sessionStorage.removeItem('nyx_session'); }
+// ════════════════════════════════════
+// STORAGE HELPERS
+// ════════════════════════════════════
+const getUsers = () => { try { return JSON.parse(localStorage.getItem('nyx_users') || '{}'); } catch { return {}; } };
+const setUsers = u => localStorage.setItem('nyx_users', JSON.stringify(u));
+const getCfg   = () => { try { return JSON.parse(localStorage.getItem('nyx_cfg') || '{}'); } catch { return {}; } };
+const setCfg   = c => localStorage.setItem('nyx_cfg', JSON.stringify(c));
+const getSess  = () => { try { return JSON.parse(sessionStorage.getItem('nyx_sess') || 'null'); } catch { return null; } };
+const setSess  = u => sessionStorage.setItem('nyx_sess', JSON.stringify(u));
+const clrSess  = () => sessionStorage.removeItem('nyx_sess');
 
-function isOwner(username) { return username === OWNER_UN; }
+const isOwner = u => u === OWNER_UN;
 
-// Init owner in users
-(function initOwner() {
-  const users = getUsers();
-  if (!users[OWNER_UN]) {
-    users[OWNER_UN] = { password: OWNER_PW, createdAt: Date.now() };
-    saveUsers(users);
-  }
+// ensure owner exists
+(function(){
+  const u = getUsers();
+  if (!u[OWNER_UN]) { u[OWNER_UN] = { pw: OWNER_PW, ts: Date.now() }; setUsers(u); }
 })();
 
-// ═══════════════════════════════════════════
-// LOADING & BOOT
-// ═══════════════════════════════════════════
-let currentUser = null;
-let chatHistory = [];
+// ════════════════════════════════════
+// STATE
+// ════════════════════════════════════
+let curUser = null;
+let history = []; // {role:'user'|'assistant', content:''}
 
+// ════════════════════════════════════
+// BOOT
+// ════════════════════════════════════
 window.addEventListener('load', () => {
   setTimeout(() => {
-    document.getElementById('loading-screen').classList.add('hidden');
-    const session = getSession();
-    if (session && session.username) {
+    document.getElementById('loading').classList.add('gone');
+    const sess = getSess();
+    if (sess && sess.u) {
       const users = getUsers();
-      // Verify session still valid
-      const isO = isOwner(session.username);
-      if (isO || users[session.username]) {
-        currentUser = session.username;
+      if (isOwner(sess.u) || users[sess.u]) {
+        curUser = sess.u;
         bootApp();
         return;
       }
     }
-    document.getElementById('auth-screen').style.removeProperty('visibility');
-  }, 2000);
+    // show auth
+  }, 1900);
 });
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 // AUTH
-// ═══════════════════════════════════════════
-function switchTab(tab) {
-  const isLogin = tab === 'login';
-  document.getElementById('tab-login').classList.toggle('active', isLogin);
-  document.getElementById('tab-register').classList.toggle('active', !isLogin);
-  document.getElementById('form-login').style.display = isLogin ? '' : 'none';
-  document.getElementById('form-register').style.display = isLogin ? 'none' : '';
+// ════════════════════════════════════
+function switchTab(t) {
+  const isIn = t === 'in';
+  document.getElementById('tab-in').classList.toggle('on', isIn);
+  document.getElementById('tab-up').classList.toggle('on', !isIn);
+  document.getElementById('form-in').style.display = isIn ? '' : 'none';
+  document.getElementById('form-up').style.display = isIn ? 'none' : '';
 }
 
-function showAuthMsg(id, msg, type) {
+function setMsg(id, txt, cls) {
   const el = document.getElementById(id);
-  el.textContent = msg;
-  el.className = `auth-msg ${type}`;
+  el.textContent = txt;
+  el.className = 'auth-note ' + cls;
 }
 
 function doLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  if (!user || !pass) return showAuthMsg('login-msg', 'Isi semua field!', 'error');
+  const user = document.getElementById('li-user').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  if (!user || !pass) return setMsg('li-msg', 'Isi semua field!', 'err');
 
-  // Check owner
-  if (user === OWNER_UN) {
-    if (pass === OWNER_PW) { loginSuccess(user); return; }
-    else { showAuthMsg('login-msg', 'Password salah!', 'error'); return; }
+  if (isOwner(user)) {
+    if (pass === OWNER_PW) { loginOK(user); return; }
+    return setMsg('li-msg', 'Password salah!', 'err');
   }
 
   const users = getUsers();
-  if (!users[user]) return showAuthMsg('login-msg', 'Username tidak ditemukan.', 'error');
-  if (users[user].password !== pass) return showAuthMsg('login-msg', 'Password salah!', 'error');
-  loginSuccess(user);
+  if (!users[user]) return setMsg('li-msg', 'Username tidak ditemukan.', 'err');
+  if (users[user].pw !== pass) return setMsg('li-msg', 'Password salah!', 'err');
+  loginOK(user);
 }
 
-function loginSuccess(username) {
-  showAuthMsg('login-msg', 'Berhasil masuk!', 'success');
-  setSession({ username });
-  currentUser = username;
+function loginOK(username) {
+  setMsg('li-msg', 'Berhasil masuk!', 'ok');
+  setSess({ u: username });
+  curUser = username;
   setTimeout(() => {
-    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('auth').classList.add('gone');
     bootApp();
-  }, 600);
+  }, 550);
 }
 
 function doRegister() {
-  const user = document.getElementById('reg-user').value.trim();
-  const pass = document.getElementById('reg-pass').value;
-  const pass2 = document.getElementById('reg-pass2').value;
+  const user  = document.getElementById('ru-user').value.trim();
+  const pass  = document.getElementById('ru-pass').value;
+  const pass2 = document.getElementById('ru-pass2').value;
 
-  if (!user || !pass || !pass2) return showAuthMsg('reg-msg', 'Isi semua field!', 'error');
-  if (user.length < 3) return showAuthMsg('reg-msg', 'Username min. 3 karakter.', 'error');
-  if (pass.length < 6) return showAuthMsg('reg-msg', 'Password min. 6 karakter.', 'error');
-  if (pass !== pass2) return showAuthMsg('reg-msg', 'Password tidak cocok!', 'error');
-  if (user === OWNER_UN) return showAuthMsg('reg-msg', 'Username tidak tersedia.', 'error');
+  if (!user || !pass || !pass2) return setMsg('ru-msg', 'Isi semua field!', 'err');
+  if (user.length < 3)          return setMsg('ru-msg', 'Username min. 3 karakter.', 'err');
+  if (pass.length < 6)          return setMsg('ru-msg', 'Password min. 6 karakter.', 'err');
+  if (pass !== pass2)           return setMsg('ru-msg', 'Password tidak cocok!', 'err');
+  if (isOwner(user))            return setMsg('ru-msg', 'Username tidak tersedia.', 'err');
 
   const users = getUsers();
-  if (users[user]) return showAuthMsg('reg-msg', 'Username sudah dipakai!', 'error');
+  if (users[user])              return setMsg('ru-msg', 'Username sudah dipakai!', 'err');
 
-  users[user] = { password: pass, createdAt: Date.now() };
-  saveUsers(users);
-  showAuthMsg('reg-msg', 'Akun berhasil dibuat! Silakan masuk.', 'success');
-  setTimeout(() => switchTab('login'), 1200);
+  users[user] = { pw: pass, ts: Date.now() };
+  setUsers(users);
+  setMsg('ru-msg', 'Akun berhasil dibuat! Silakan masuk.', 'ok');
+  setTimeout(() => switchTab('in'), 1200);
 }
 
 function doLogout() {
-  clearSession();
-  currentUser = null;
-  chatHistory = [];
-  document.getElementById('app').classList.remove('visible');
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('auth-screen').classList.remove('hidden');
-  document.getElementById('login-user').value = '';
-  document.getElementById('login-pass').value = '';
-  document.getElementById('login-msg').textContent = '';
-  // reset chat
-  document.getElementById('chat-messages').innerHTML = '';
-  document.getElementById('chat-messages').style.display = 'none';
-  document.getElementById('chat-welcome').style.display = '';
+  clrSess(); curUser = null; history = [];
+  const app = document.getElementById('app');
+  app.classList.remove('show');
+  app.style.display = 'none';
+  document.getElementById('auth').classList.remove('gone');
+  document.getElementById('li-user').value = '';
+  document.getElementById('li-pass').value = '';
+  document.getElementById('li-msg').textContent = '';
+  clearChat();
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 // BOOT APP
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 function bootApp() {
   const app = document.getElementById('app');
   app.style.display = 'flex';
-  setTimeout(() => app.classList.add('visible'), 50);
+  setTimeout(() => app.classList.add('show'), 40);
 
-  // Setup sidebar
-  const initials = currentUser.substring(0, 2).toUpperCase();
-  document.getElementById('sb-avatar').textContent = initials;
-  document.getElementById('sb-username').textContent = currentUser;
-  document.getElementById('sb-role').textContent = isOwner(currentUser) ? 'owner' : 'member';
+  const initials = curUser.substring(0, 2).toUpperCase();
+  document.getElementById('sb-av').textContent   = initials;
+  document.getElementById('sb-name').textContent = curUser;
+  document.getElementById('sb-role').textContent = isOwner(curUser) ? 'owner' : 'member';
+  document.getElementById('sb-own').style.display = isOwner(curUser) ? '' : 'none';
 
-  if (isOwner(currentUser)) {
-    document.getElementById('sb-owner-badge').style.display = '';
-    document.getElementById('section-api').style.display = '';
-    document.getElementById('section-sysprompt').style.display = '';
-    document.getElementById('section-member-info').style.display = 'none';
-    // Load saved config into fields
-    const cfg = getConfig();
-    if (cfg.apiKey) document.getElementById('api-key-input').value = cfg.apiKey;
-    if (cfg.model) document.getElementById('model-select').value = cfg.model;
-    if (cfg.systemPrompt) document.getElementById('sysprompt-input').value = cfg.systemPrompt;
+  if (isOwner(curUser)) {
+    document.getElementById('sec-api').style.display = '';
+    document.getElementById('sec-sys').style.display = '';
+    document.getElementById('sec-mem').style.display = 'none';
+    const cfg = getCfg();
+    if (cfg.apiKey)      document.getElementById('api-inp').value    = cfg.apiKey;
+    if (cfg.modelSel)    document.getElementById('model-sel').value  = cfg.modelSel;
+    if (cfg.modelCustom) document.getElementById('model-custom').value = cfg.modelCustom;
+    if (cfg.sysprompt)   document.getElementById('sys-inp').value    = cfg.sysprompt;
   } else {
-    document.getElementById('sb-owner-badge').style.display = 'none';
-    document.getElementById('section-api').style.display = 'none';
-    document.getElementById('section-sysprompt').style.display = 'none';
-    document.getElementById('section-member-info').style.display = '';
+    document.getElementById('sec-api').style.display = 'none';
+    document.getElementById('sec-sys').style.display = 'none';
+    document.getElementById('sec-mem').style.display = '';
   }
 
-  // Check API key
-  const cfg = getConfig();
-  if (!cfg.apiKey) {
-    document.getElementById('no-api-banner').classList.add('show');
-  }
+  const cfg = getCfg();
+  if (!cfg.apiKey) document.getElementById('api-warn').classList.add('show');
+  else             document.getElementById('api-warn').classList.remove('show');
 
   showPanel('chat');
 }
 
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 // PANEL NAVIGATION
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 function showPanel(name) {
-  document.getElementById('panel-chat').style.display = name === 'chat' ? 'flex' : 'none';
-  const sp = document.getElementById('panel-settings');
-  sp.style.display = name === 'settings' ? 'flex' : 'none';
-
-  document.getElementById('nav-chat').classList.toggle('active', name === 'chat');
-  document.getElementById('nav-settings').classList.toggle('active', name === 'settings');
+  const isChat = name === 'chat';
+  document.getElementById('p-chat').style.display = isChat ? 'flex' : 'none';
+  document.getElementById('p-set').style.display  = isChat ? 'none' : 'flex';
+  document.getElementById('nav-chat').classList.toggle('on', isChat);
+  document.getElementById('nav-set').classList.toggle('on', !isChat);
 }
 
-// ═══════════════════════════════════════════
-// SETTINGS ACTIONS
-// ═══════════════════════════════════════════
-function saveAPISettings() {
-  const apiKey = document.getElementById('api-key-input').value.trim();
-  const model = document.getElementById('model-select').value;
-  const cfg = getConfig();
-  cfg.apiKey = apiKey;
-  cfg.model = model;
-  saveConfig(cfg);
-  if (apiKey) document.getElementById('no-api-banner').classList.remove('show');
-  else document.getElementById('no-api-banner').classList.add('show');
-  flashMsg('save-api-msg');
+// ════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════
+function saveAPI() {
+  const apiKey      = document.getElementById('api-inp').value.trim();
+  const modelSel    = document.getElementById('model-sel').value;
+  const modelCustom = document.getElementById('model-custom').value.trim();
+  const cfg = getCfg();
+  cfg.apiKey      = apiKey;
+  cfg.modelSel    = modelSel;
+  cfg.modelCustom = modelCustom;
+  cfg.model       = modelCustom || modelSel;
+  setCfg(cfg);
+  const warn = document.getElementById('api-warn');
+  if (apiKey) warn.classList.remove('show'); else warn.classList.add('show');
+  flash('sv-api');
 }
 
-function saveSysPrompt() {
-  const sp = document.getElementById('sysprompt-input').value;
-  const cfg = getConfig();
-  cfg.systemPrompt = sp;
-  saveConfig(cfg);
-  flashMsg('save-sys-msg');
+function saveSys() {
+  const sp = document.getElementById('sys-inp').value;
+  const cfg = getCfg();
+  cfg.sysprompt = sp;
+  setCfg(cfg);
+  flash('sv-sys');
 }
 
-function flashMsg(id) {
+function flash(id) {
   const el = document.getElementById(id);
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-function changePassword() {
-  const oldP = document.getElementById('old-pass').value;
-  const newP = document.getElementById('new-pass').value;
-  const newP2 = document.getElementById('new-pass2').value;
-  doChangePass(oldP, newP, newP2, 'save-pass-msg', 'save-pass-err');
-  document.getElementById('old-pass').value = '';
-  document.getElementById('new-pass').value = '';
-  document.getElementById('new-pass2').value = '';
+// ════════════════════════════════════
+// CHANGE PASSWORD
+// ════════════════════════════════════
+function doCP() {
+  const r = changePass(
+    document.getElementById('cp-old').value,
+    document.getElementById('cp-new').value,
+    document.getElementById('cp-new2').value
+  );
+  document.getElementById('cp-old').value  = '';
+  document.getElementById('cp-new').value  = '';
+  document.getElementById('cp-new2').value = '';
+  if (r === true) flash('sv-cp-ok');
+  else {
+    const e = document.getElementById('sv-cp-err');
+    e.textContent = r; e.classList.add('show');
+    setTimeout(() => e.classList.remove('show'), 2500);
+  }
 }
 
-function changePasswordModal() {
-  const oldP = document.getElementById('m-old-pass').value;
-  const newP = document.getElementById('m-new-pass').value;
-  const newP2 = document.getElementById('m-new-pass2').value;
-  const msgEl = document.getElementById('m-pass-msg');
-  const ok = doChangePass(oldP, newP, newP2, null, null);
-  msgEl.style.opacity = '1';
-  if (ok === true) { msgEl.style.color = 'var(--success)'; msgEl.textContent = '✓ Password berhasil diganti!'; }
-  else { msgEl.style.color = 'var(--error)'; msgEl.textContent = ok; }
-  setTimeout(() => { msgEl.style.opacity = '0'; }, 3000);
+function openCpModal() { document.getElementById('cp-modal').classList.add('open'); }
+function closeModal()  { document.getElementById('cp-modal').classList.remove('open'); }
+
+function doMCP() {
+  const r = changePass(
+    document.getElementById('mcp-old').value,
+    document.getElementById('mcp-new').value,
+    document.getElementById('mcp-new2').value
+  );
+  const el = document.getElementById('mcp-msg');
+  el.style.opacity = '1';
+  if (r === true) { el.style.color = 'var(--success)'; el.textContent = '✓ Password berhasil diganti!'; }
+  else            { el.style.color = 'var(--error)';   el.textContent = r; }
+  setTimeout(() => { el.style.opacity = '0'; }, 3000);
 }
 
-function doChangePass(oldP, newP, newP2, successId, errId) {
-  if (!oldP || !newP || !newP2) {
-    if (errId) { const e = document.getElementById(errId); e.textContent = 'Isi semua field!'; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2500); }
-    return 'Isi semua field!';
-  }
-  if (newP.length < 6) {
-    if (errId) { const e = document.getElementById(errId); e.textContent = 'Password baru min. 6 karakter.'; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2500); }
-    return 'Password baru min. 6 karakter.';
-  }
-  if (newP !== newP2) {
-    if (errId) { const e = document.getElementById(errId); e.textContent = 'Password tidak cocok!'; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2500); }
-    return 'Password tidak cocok!';
-  }
+function changePass(oldP, newP, newP2) {
+  if (!oldP || !newP || !newP2) return 'Isi semua field!';
+  if (newP.length < 6)         return 'Password baru min. 6 karakter.';
+  if (newP !== newP2)          return 'Password tidak cocok!';
 
-  if (isOwner(currentUser)) {
-    if (oldP !== OWNER_PW) {
-      if (errId) { const e = document.getElementById(errId); e.textContent = 'Password lama salah!'; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2500); }
-      return 'Password lama salah!';
-    }
-    // Owner password stored in constant only for demo; inform
-    if (successId) flashMsg(successId);
-    return true;
+  if (isOwner(curUser)) {
+    if (oldP !== OWNER_PW) return 'Password lama salah!';
+    return true; // owner password is hardcoded; just confirm
   }
 
   const users = getUsers();
-  if (users[currentUser].password !== oldP) {
-    if (errId) { const e = document.getElementById(errId); e.textContent = 'Password lama salah!'; e.classList.add('show'); setTimeout(() => e.classList.remove('show'), 2500); }
-    return 'Password lama salah!';
-  }
-  users[currentUser].password = newP;
-  saveUsers(users);
-  if (successId) flashMsg(successId);
+  if (!users[curUser])          return 'User tidak ditemukan.';
+  if (users[curUser].pw !== oldP) return 'Password lama salah!';
+  users[curUser].pw = newP;
+  setUsers(users);
   return true;
 }
 
-// ═══════════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════════
-function openChangePass() {
-  document.getElementById('change-pass-modal').classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 // CHAT
-// ═══════════════════════════════════════════
+// ════════════════════════════════════
 function clearChat() {
-  chatHistory = [];
-  document.getElementById('chat-messages').innerHTML = '';
-  document.getElementById('chat-messages').style.display = 'none';
-  document.getElementById('chat-welcome').style.display = '';
+  history = [];
+  document.getElementById('chat-msgs').innerHTML = '';
+  document.getElementById('chat-msgs').style.display = 'none';
+  document.getElementById('chat-wlc').style.display = '';
 }
 
 function autoResize(el) {
@@ -1211,136 +1006,140 @@ function autoResize(el) {
 }
 
 function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
 }
 
-function appendMsg(role, text) {
-  const welcome = document.getElementById('chat-welcome');
-  const msgs = document.getElementById('chat-messages');
-  if (welcome.style.display !== 'none') {
-    welcome.style.display = 'none';
+// Simple markdown-like renderer
+function renderText(text) {
+  // Code blocks first
+  text = text.replace(/```([\s\S]*?)```/g, '<pre>$1</pre>');
+  // Inline code
+  text = text.replace(/`([^`]+)`/g, '<span class="md-code">$1</span>');
+  // Bold
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="md-bold">$1</strong>');
+  // Line breaks
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+function appendMsg(role, rawText) {
+  const wlc  = document.getElementById('chat-wlc');
+  const msgs = document.getElementById('chat-msgs');
+  if (wlc.style.display !== 'none') {
+    wlc.style.display = 'none';
     msgs.style.display = 'flex';
   }
 
-  const cfg = getConfig();
   const isAI = role === 'ai';
-  const avatarLetter = isAI ? '✦' : currentUser.substring(0,2).toUpperCase();
-  const bubbleClass = isAI ? 'ai' : 'user';
-  const wrapClass = isAI ? '' : 'user';
-  const nameLabel = isAI ? 'Nyx-AI' : currentUser;
-
   const wrap = document.createElement('div');
-  wrap.className = `msg-wrap ${wrapClass}`;
+  wrap.className = 'mw' + (isAI ? '' : ' u');
+
+  // For user messages escape HTML; for AI render markdown-ish
+  const content = isAI ? renderText(escHtml(rawText)) : escHtml(rawText).replace(/\n/g,'<br>');
+
   wrap.innerHTML = `
-    <div class="msg-avatar ${isAI ? 'ai-av' : 'user-av'}">${avatarLetter}</div>
-    <div class="msg-content">
-      <div class="msg-name">${nameLabel}</div>
-      <div class="msg-bubble ${bubbleClass}">${escapeHtml(text)}</div>
-    </div>
-  `;
+    <div class="m-av ${isAI ? 'ai-a' : 'u-a'}">${isAI ? '✦' : curUser.substring(0,2).toUpperCase()}</div>
+    <div class="m-body">
+      <div class="m-nm">${isAI ? 'Nyx-AI' : curUser}</div>
+      <div class="m-bub ${isAI ? 'ai' : 'u'}">${content}</div>
+    </div>`;
   msgs.appendChild(wrap);
   msgs.scrollTop = msgs.scrollHeight;
-  return wrap;
 }
 
-function appendTyping() {
-  const msgs = document.getElementById('chat-messages');
-  const welcome = document.getElementById('chat-welcome');
-  if (welcome.style.display !== 'none') {
-    welcome.style.display = 'none';
-    msgs.style.display = 'flex';
-  }
-  const wrap = document.createElement('div');
-  wrap.className = 'msg-wrap';
-  wrap.id = 'typing-wrap';
-  wrap.innerHTML = `
-    <div class="msg-avatar ai-av">✦</div>
-    <div class="msg-content">
-      <div class="msg-name">Nyx-AI</div>
-      <div class="msg-bubble ai">
-        <div class="typing-indicator">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-        </div>
+function addTyping() {
+  const msgs = document.getElementById('chat-msgs');
+  const wlc  = document.getElementById('chat-wlc');
+  if (wlc.style.display !== 'none') { wlc.style.display='none'; msgs.style.display='flex'; }
+  const w = document.createElement('div');
+  w.className = 'mw'; w.id = 'typing';
+  w.innerHTML = `<div class="m-av ai-a">✦</div>
+    <div class="m-body">
+      <div class="m-nm">Nyx-AI</div>
+      <div class="m-bub ai">
+        <div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
       </div>
-    </div>
-  `;
-  msgs.appendChild(wrap);
+    </div>`;
+  msgs.appendChild(w);
   msgs.scrollTop = msgs.scrollHeight;
 }
+function rmTyping() { const e=document.getElementById('typing'); if(e) e.remove(); }
 
-function removeTyping() {
-  const el = document.getElementById('typing-wrap');
-  if (el) el.remove();
-}
-
-function escapeHtml(text) {
-  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-             .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-}
-
-async function sendMessage() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
+async function sendMsg() {
+  const inp  = document.getElementById('chat-inp');
+  const text = inp.value.trim();
   if (!text) return;
 
-  const cfg = getConfig();
+  const cfg = getCfg();
   if (!cfg.apiKey) {
-    document.getElementById('no-api-banner').classList.add('show');
+    document.getElementById('api-warn').classList.add('show');
+    showPanel('set'); // redirect to settings
     return;
   }
 
-  input.value = '';
-  input.style.height = 'auto';
+  inp.value = '';
+  inp.style.height = 'auto';
   document.getElementById('send-btn').disabled = true;
-  document.getElementById('ai-status-text').textContent = '● Mengetik...';
+  document.getElementById('ai-st').textContent = '● Mengetik...';
 
   appendMsg('user', text);
-  chatHistory.push({ role: 'user', content: text });
-
-  appendTyping();
+  history.push({ role: 'user', content: text });
+  addTyping();
 
   try {
-    const body = {
-      model: cfg.model || 'claude-sonnet-4-20250514',
-      max_tokens: 1500,
-      messages: chatHistory
-    };
-    if (cfg.systemPrompt) body.system = cfg.systemPrompt;
+    const model = cfg.model || 'anthropic/claude-sonnet-4-5';
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // Build messages array
+    const messages = [];
+    if (cfg.sysprompt && cfg.sysprompt.trim()) {
+      messages.push({ role: 'system', content: cfg.sysprompt.trim() });
+    }
+    // Add chat history (skip system roles from previous sends)
+    history.forEach(m => {
+      if (m.role === 'user' || m.role === 'assistant') {
+        messages.push({ role: m.role, content: m.content });
+      }
+    });
+
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': cfg.apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Authorization': 'Bearer ' + cfg.apiKey,
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'Nyx-AI'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        model: model,
+        max_tokens: 2048,
+        messages: messages
+      })
     });
 
     const data = await res.json();
-    removeTyping();
+    rmTyping();
 
     if (!res.ok) {
-      const errMsg = data?.error?.message || 'Error dari API.';
+      const errMsg = data?.error?.message || ('HTTP ' + res.status);
       appendMsg('ai', '⚠️ Error: ' + errMsg);
     } else {
-      const reply = data.content?.[0]?.text || '(Tidak ada respons)';
+      const reply = data?.choices?.[0]?.message?.content || '(Tidak ada respons)';
       appendMsg('ai', reply);
-      chatHistory.push({ role: 'assistant', content: reply });
+      history.push({ role: 'assistant', content: reply });
     }
   } catch (err) {
-    removeTyping();
-    appendMsg('ai', '⚠️ Gagal terhubung ke API. Cek API Key dan koneksi internet.');
+    rmTyping();
+    appendMsg('ai', '⚠️ Gagal terhubung. Periksa koneksi internet dan API Key.');
+    console.error(err);
   }
 
   document.getElementById('send-btn').disabled = false;
-  document.getElementById('ai-status-text').textContent = '● Online & Siap';
+  document.getElementById('ai-st').textContent = '● Online & Siap';
 }
 </script>
 </body>
